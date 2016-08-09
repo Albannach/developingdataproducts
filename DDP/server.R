@@ -1,7 +1,6 @@
 library(shiny)
 library(data.table)
 library(ggplot2)
-library(caret)
 pulseRate <- fread('http://www.statsci.org/data/oz/ms212.txt')
 pulseRate$diff = pulseRate[,Pulse2]-pulseRate[,Pulse1]
 pulseRate$Gender = factor(pulseRate$Gender)
@@ -9,14 +8,6 @@ pulseRate$Smokes = factor(pulseRate$Smokes)
 pulseRate$Alcohol = factor(pulseRate$Alcohol)
 pulseRate$Exercise = factor(pulseRate$Exercise)
 pulseRate$Ran = factor(pulseRate$Ran)
-
-inTraining = createDataPartition(pulseRate$Gender, list=FALSE, p = 0.7)
-training  = pulseRate[inTraining,]
-crossValidation = pulseRate[-inTraining,]
-dim(training);  dim(crossValidation)
-
-t = subset(training[complete.cases(training),], select=-c(Pulse1,Pulse2, Ran, Year))
-c = subset(crossValidation[complete.cases(crossValidation),], select=-c(Pulse1,Pulse2, Ran, Year))
 
 shinyServer(function(input, output) {
     x = reactive({paste("Plotting for ", if (input$Males) 'Males ' else '', if (input$Females) 'Females ' else '')})
