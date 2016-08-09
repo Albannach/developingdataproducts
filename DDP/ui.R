@@ -1,33 +1,31 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-# 
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
 
-# Define UI for application that draws a histogram
+dataset = pulseRate
+
 shinyUI(fluidPage(
-  
-  # Application title
-  titlePanel("Old Faithful Geyser Data"),
-  
-  # Sidebar with a slider input for number of bins 
-  sidebarLayout(
-    sidebarPanel(
-       sliderInput("bins",
-                   "Number of bins:",
-                   min = 1,
-                   max = 50,
-                   value = 30)
+
+    title = "Pulse Rates data",
+    
+    fluidRow(
+        column(3,
+               h4("Pulse Rate Explorer"),
+               selectInput('x', 'X-Axis value', names(dataset)),
+               selectInput('y', 'Y-Axis Value', names(dataset)),
+               checkboxInput('jitter', 'Jitter')
+        ),
+        column(3,
+               h4("Gender"),
+               checkboxInput("Males", label = "Males", value = FALSE),
+               checkboxInput("Females", label = "Females", value = FALSE),
+               textOutput("plotting")
+        ),
+        column(3,
+               actionButton("goButton", "Update plot")
+        ),
+        column(3,
+               h6("Data source : Smyth, GK (2011). Australasian Data and Story Library (OzDASL). http://www.statsci.org/data.")
+        )
     ),
     
-    # Show a plot of the generated distribution
-    mainPanel(
-       plotOutput("distPlot")
-    )
-  )
+    plotOutput("pulsePlot")
 ))

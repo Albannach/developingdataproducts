@@ -1,26 +1,35 @@
-#
-# This is the server logic of a Shiny web application. You can run the 
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-# 
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
+library(data.table)
+library(ggplot2)
+library(caret)
+pulseRate <- fread('http://www.statsci.org/data/oz/ms212.txt')
+pulseRate$diff = pulseRate[,Pulse2]-pulseRate[,Pulse1]
+pulseRate$Gender = factor(pulseRate$Gender)
+pulseRate$Smokes = factor(pulseRate$Smokes)
+pulseRate$Alcohol = factor(pulseRate$Alcohol)
+pulseRate$Exercise = factor(pulseRate$Exercise)
+pulseRate$Ran = factor(pulseRate$Ran)
 
-# Define server logic required to draw a histogram
+inTraining = createDataPartition(pulseRate$Gender, list=FALSE, p = 0.7)
+training  = pulseRate[inTraining,]
+crossValidation = pulseRate[-inTraining,]
+dim(training);  dim(crossValidation)
+
+t = subset(training[complete.cases(training),], select=-c(Pulse1,Pulse2, Ran, Year))
+c = subset(crossValidation[complete.cases(crossValidation),], select=-c(Pulse1,Pulse2, Ran, Year))
+
 shinyServer(function(input, output) {
-   
-  output$distPlot <- renderPlot({
-    
-    # generate bins based on input$bins from ui.R
-    x    <- faithful[, 2] 
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
-    
-    # draw the histogram with the specified number of bins
-    hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    
-  })
-  
+    x = reactive({paste("Plotting for ", if (input$Males) 'Males ' else '', if (input$Females) 'Females ' else '')})
+    output$plotting = renderText({x()})
+    output$pulsePlot = renderPlot({
+        input$goButton
+        isolate(
+            if (input$Males && !input$Females)
+                ggplot(pulseRate[Gender=='1'], aes_string(x=input$x, y=input$y)) + geom_point() + geom_jitter(width=.1, height=.1) 
+            else if (input$Females && !input$Males)
+                ggplot(pulseRate[Gender=='2'], aes_string(x=input$x, y=input$y)) + geom_point() + geom_jitter(width=.1, height=.1)
+            else if (input$Females && input$Males)
+                ggplot(pulseRate, aes_string(x=input$x, y=input$y)) + geom_point() + geom_jitter(width=.1, height=.1, aes(colour=Gender))
+        )
+    })
 })
