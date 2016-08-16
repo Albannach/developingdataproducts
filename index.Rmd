@@ -1,0 +1,65 @@
+---
+title       : The Pulse Rates dataset
+subtitle    : Lifestyle and pulse rate
+author      : Colin N. Paterson
+job         : Software
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+
+--- .class #id 
+
+## The dataset
+
+<p style="font-size:20px">The data set is sourced from "OzDASL" the Australasian Data and Story Library, and consists of set of observations related to a subjects pulse rate before and after strenuous exercise.  Various aspects of the subjects life style are recorded along with the data relatred to the pulse readings. The data is fully documented at "http://www.statsci.org/data/oz/ms212.html". The first few rows of the data are shown below.</p>
+
+```{r loading, echo=FALSE, message=FALSE, warning=FALSE}
+library(data.table)
+library(ggplot2)
+pulseRate <- fread('http://www.statsci.org/data/oz/ms212.txt')
+head(pulseRate, n=2)
+```
+
+<p style="font-size:20px">The intention is to provide an application that allows the user to plot various aspects of the data. The structure of the data is shown below.</p>
+
+```{r, echo=FALSE}
+str(pulseRate)
+```
+
+--- .class reveal 
+
+## The central question...
+
+<p style="font-size:20px">The main question that this dataset could be used to answer is by how much a subjects pulse rate changes with exercise and what lifestyle factor affect this change.</p>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(pulseRate, aes(Pulse1, Pulse2)) + geom_point() + xlab("Pulse rate before exercise") + ylab("Pulse rate after exercise")
+```
+
+--- &twocol
+
+### Some example plots.
+
+*** =left
+<p style="font-size:20px">The age of the subject vs the subjects Pulse2.</p>
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(pulseRate, aes(Age, Pulse2))+geom_point()
+```
+
+*** =right
+<p style="font-size:20px">The weight of the subject vs the Pulse2.</p>
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(pulseRate, aes(Weight, Pulse2))+geom_point()
+```
+
+*** =fullwidth
+
+--- .class #id
+
+### Enjoy!
+
+Please use the application to explore various aspects of the Pulse Rate dataset!
+
