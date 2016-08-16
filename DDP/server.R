@@ -1,13 +1,6 @@
 library(shiny)
 library(data.table)
 library(ggplot2)
-pulseRate <- fread('http://www.statsci.org/data/oz/ms212.txt')
-pulseRate$diff = pulseRate[,Pulse2]-pulseRate[,Pulse1]
-pulseRate$Gender = factor(pulseRate$Gender)
-pulseRate$Smokes = factor(pulseRate$Smokes)
-pulseRate$Alcohol = factor(pulseRate$Alcohol)
-pulseRate$Exercise = factor(pulseRate$Exercise)
-pulseRate$Ran = factor(pulseRate$Ran)
 
 shinyServer(function(input, output) {
     x = reactive({paste("Plotting for ", if (input$Males) 'Males ' else '', if (input$Females) 'Females ' else '')})
