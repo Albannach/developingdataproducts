@@ -31,14 +31,15 @@ shinyUI(fluidPage(
                 column(4, 
                       actionButton("goButton", "Update plot")
                 ),
-                column(4, tags$a(class="btn btn-default", href="http://internal.shinyapps.io/copacetic/DDPP/help.html", "Documentation")),
+                column(4, tags$a(class="btn btn-default", href="https://albannach.github.io/developingdataproducts/DDP/help.html", "Documentation")),
                 column(2,h6(""))
             )
         ),
         column(4,
             fluidRow(column(12, h6(""))),
             fluidRow(column(12,
-                h6("Data source : Smyth, GK (2011). Australasian Data and Story Library (OzDASL). http://www.statsci.org/data."))
+                h6("Data source : Smyth, GK (2011). Australasian Data and Story Library (OzDASL). http://www.statsci.org/data."),
+                h6("http://www.statsci.org/data/oz/ms212.txt"))
             ),
             fluidRow(column(12, plotOutput("pulsePlot")))
         ),
